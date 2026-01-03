@@ -8,14 +8,11 @@ spec:
 
   source:
     repoURL: https://github.com/rakeshkrmeena/gitops-demo.git
+    path: charts/podinfo
     targetRevision: main
-    path: envs/test
     helm:
-      chart: podinfo
-      repoURL: https://stefanprodan.github.io/podinfo
-      targetRevision: 6.5.4
       valueFiles:
-        - values.yaml
+        - ../../envs/test/values.yaml
 
   destination:
     server: https://kubernetes.default.svc
