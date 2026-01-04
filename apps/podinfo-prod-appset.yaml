@@ -1,18 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: podinfo-nonprod
+  name: podinfo-prod
   namespace: argocd
 spec:
   generators:
   - list:
       elements:
-      - env: dev
-      - env: test
+      - env: prod
 
   template:
     metadata:
-      name: podinfo-{{env}}
+      name: podinfo-prod
     spec:
       project: default
 
@@ -22,16 +21,13 @@ spec:
         targetRevision: main
         helm:
           valueFiles:
-            - ../../envs/{{env}}/values.yaml
+            - ../../envs/prod/values.yaml
 
       destination:
         server: https://kubernetes.default.svc
-        namespace: podinfo-{{env}}
+        namespace: podinfo-prod
 
       syncPolicy:
-        automated:
-          prune: false
-          selfHeal: true
         syncOptions:
           - CreateNamespace=true
 
