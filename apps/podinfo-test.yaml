@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: podinfo-test
-  namespace: argocd
+  namespace: argocd #Application CR (Custom Resource) lives in argocd
 spec:
   project: default
 
@@ -16,7 +16,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: podinfo-test
+    namespace: podinfo-test #Workloads live in podinfo-test
 
   syncPolicy:
     automated:
