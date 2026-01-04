@@ -1,0 +1,11 @@
+replicaCount: 1
+
+ui:
+  color: "#1f78b4" # blue original
+
+image:
+  repository: ghcr.io/stefanprodan/podinfo
+  tag: "6.5.4"
+
+service:
+  type: ClusterIP
