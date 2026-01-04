@@ -1,8 +1,8 @@
 replicaCount: 1
 
 ui:
-  color: "#1f78b4" # blue original
-  #color: "#e74c3c" # red
+  #color: "#1f78b4" # blue original
+  color: "#e74c3c" # red
 
 image:
   repository: ghcr.io/stefanprodan/podinfo
