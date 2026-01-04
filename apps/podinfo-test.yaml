@@ -1,27 +1,49 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
-  name: podinfo-test
-  namespace: argocd #Application CR (Custom Resource) lives in argocd
+  name: podinfo
+  namespace: argocd
 spec:
-  project: default
+  generators:
+  - list:
+      elements:
+      - env: dev
+        autoSync: "true"
+        prune: "true"
+        selfHeal: "true"
+      - env: test
+        autoSync: "true"
+        prune: "false"
+        selfHeal: "true"
+      - env: prod
+        autoSync: "false"
+        prune: "false"
+        selfHeal: "false"
 
-  source:
-    repoURL: https://github.com/rakeshkrmeena/gitops-demo.git
-    path: charts/podinfo
-    targetRevision: main
-    helm:
-      valueFiles:
-        - ../../envs/test/values.yaml
+  template:
+    metadata:
+      name: podinfo-{{env}}
+    spec:
+      project: default
 
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: podinfo-test #Workloads live in podinfo-test
+      source:
+        repoURL: https://github.com/rakeshkrmeena/gitops-demo.git
+        path: charts/podinfo
+        targetRevision: main
+        helm:
+          valueFiles:
+            - ../../envs/{{env}}/values.yaml
 
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: podinfo-{{env}}
+
+      syncPolicy:
+        {{- if eq .autoSync "true" }}
+        automated:
+          prune: {{.prune}}
+          selfHeal: {{.selfHeal}}
+        {{- end }}
+        syncOptions:
+          - CreateNamespace=true
 
